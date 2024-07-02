@@ -1,6 +1,6 @@
 const Vacation = require("../models/vacationSchema");
 const Employee = require("../models/employeeShema")
-const { validationDate } = require("../utils");
+const { validationDate, validationDaysTaken } = require("../utils");
 
 const getVacations = async (req, res) => {
     try {
@@ -17,11 +17,15 @@ const createVacation = async (req, res) => {
         const employee = await Employee.findById(employeeId)
         const vacationsList = await Vacation.find()
         const rolId = employee.rol
-
-        console.log(rolId)
         const rolCondition = (rol2) => rolId.toString() === rol2.toString()
-
+        
         if (!validationDate(startDate, endDate, vacationsList, rolCondition)) return res.status(500).send('Server Error')
+            
+        employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24)) + 1;
+            
+        if (!validationDaysTaken(employee)) return res.status(500).send('Server Error')
+
+        employee.save()
         const newVacation = new Vacation({ employeeId, rolId, startDate, endDate })
         newVacation.save()
         res.json(newVacation);

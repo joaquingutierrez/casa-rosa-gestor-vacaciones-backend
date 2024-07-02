@@ -16,6 +16,33 @@ const validationDate = (startDate, endDate, dateList, condition) => {
     return true;
 }
 
+const validationDaysTaken = (employee)=> {
+    const joiningDate = employee.joiningDate
+    const today = new Date();
+
+    const diffMonths = (today.getFullYear() - joiningDate.getFullYear()) * 12 + (today.getMonth() - joiningDate.getMonth());
+
+    const maxVacationDays = (diffMonths) => {
+        switch(true) {
+            case diffMonths < 9:
+                return 0;
+            case diffMonths >= 9 && diffMonths < 12:
+                return 7; 
+            case diffMonths >= 12:
+                return 14;
+            default:
+                return 0;
+        }
+    }
+    const maxVacationDaysResult = maxVacationDays(diffMonths)
+
+    if (employee.daysTaken > maxVacationDaysResult) {
+        return false
+    }
+    return true
+}
+
 module.exports = {
-    validationDate
+    validationDate,
+    validationDaysTaken
 }

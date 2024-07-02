@@ -9,7 +9,7 @@ const employeeSchema = new Schema({
     nro: String,
     birdthDate: Date,
     joiningDate: {type: Date, require: true},
-    daysTaken: Number,
+    daysTaken: {type: Number, default: 0},
     rol: { type: mongoose.Schema.Types.ObjectId, ref: 'desc', required: true }
 });
 
