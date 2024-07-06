@@ -6,8 +6,11 @@ const connectDB = require('./config/db');
 const rolRouter = require('./routes/rolRoute');
 const employeeRouter = require("./routes/employeeRoute")
 const vacationRouter = require("./routes/vacationRoute")
+const cors = require('cors');
 
 connectDB();
+
+app.use(cors());
 
 app.use(express.json());
 
