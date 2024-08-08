@@ -9,22 +9,41 @@ const getRols = async (req, res) => {
     }
 }
 const createRol = async (req, res) => {
-    console.log(req.body)
     const { desc } = req.body;
 
-
     try {
-        const newRol = new Rol({desc})
+        const newRol = new Rol({ desc })
         newRol.save()
         res.json(newRol);
     }
     catch (err) {
         console.log(err)
     }
+}
 
+const updateRol = async (req, res) => {
+    const { id } = req.params;
+    const { desc } = req.body;
+
+    try {
+        const updatedRol = await Rol.findByIdAndUpdate(
+            id, 
+            { desc }, 
+            { new: true }
+        );
+        
+        if (!updatedRol) {
+            return res.status(404).json({ message: "Rol no encontrado" });
+        }
+        res.json(updatedRol);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error al actualizar el rol" });
+    }
 }
 
 module.exports = {
     getRols,
-    createRol
+    createRol,
+    updateRol
 }
