@@ -39,7 +39,21 @@ const createEmployee = async (req, res) => {
     }
 }
 
+const getEmployeeById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const employee = await Employee.findById(id);
+        if (!employee) {
+            return res.status(404).send('Employee not found');
+        }
+        res.json(employee);
+    } catch (err) {
+        res.status(500).send('Server Error');
+    }
+}
+
 module.exports = {
     getEmployees,
-    createEmployee
+    createEmployee,
+    getEmployeeById
 }

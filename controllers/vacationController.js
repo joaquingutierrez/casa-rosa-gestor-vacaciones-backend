@@ -35,7 +35,20 @@ const createVacation = async (req, res) => {
     }
 }
 
+const getVacationsByEmployeeId = async (req, res) => {
+    const {employeeId} = req.params
+
+    try {
+        const vacations = await Vacation.find({employeeId: employeeId})
+        res.json(vacations);
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
 module.exports = {
     getVacations,
-    createVacation
+    createVacation,
+    getVacationsByEmployeeId
 }
