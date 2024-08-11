@@ -10,8 +10,8 @@ const loginRouter = require("./routes/loginRouter")
 const logoutRouter = require("./routes/logoutRouter")
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
-const auth = require('./middlewares/auth');
-
+/* const auth = require('./middlewares/auth');
+ */
 connectDB();
 
 app.use(cors({
@@ -22,7 +22,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser())
 
-app.use(auth)
+/* app.use(auth) */
 
 app.use('/api/rol', rolRouter);
 app.use('/api/employee', employeeRouter);
