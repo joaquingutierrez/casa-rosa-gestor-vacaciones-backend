@@ -10,22 +10,22 @@ const redirectIfLogin = function (req, res) {
 }
 
 const login = async (req, res) => {
-    const {email, password} = req.body
+    const { email, password } = req.body
     try {
         if (!req.body) return res.status(400).send({ status: "error", error: "Invalid credentials" })
-        const user = (email === process.env.ADMIN_USER_NAME && password === process.env.ADMIN_PASSWORD) ? {userName: "ADMIN", rol: "ADMIN"} : await User.findOne({ email: req.email })
+        const user = (email === process.env.ADMIN_USER_NAME && password === process.env.ADMIN_PASSWORD) ? { userName: "ADMIN", rol: "ADMIN" } : await User.findOne({ email: req.email })
         if (user) {
             const token = jwt.sign(user, process.env.JWT_SECRET, {
                 expiresIn: "1h"
             })
             res
             .cookie("access_token", token, {
-                httpOnly:true,
-                maxAge: 1000*60*60
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60,
             })
-            .status(200).json({ message: "success", user, token })
+                .status(200).json({ message: "success", user, token })
         } else {
-        res.status(400).send({ status: "error", error: "User not found" })
+            res.status(400).send({ status: "error", error: "User not found" })
         }
 
     }
