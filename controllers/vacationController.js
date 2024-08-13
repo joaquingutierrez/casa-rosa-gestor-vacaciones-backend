@@ -1,6 +1,6 @@
 const Vacation = require("../models/vacationSchema");
 const Employee = require("../models/employeeShema")
-const { validationDate, validationDaysTaken } = require("../utils");
+const { validationDate, validationVacationsDays_basedOnTimeInPlace } = require("../utils");
 
 const getVacations = async (req, res) => {
     try {
@@ -27,8 +27,8 @@ const createVacation = async (req, res) => {
 
         employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
 
-        if (!validationDaysTaken(employee)) {
-            return res.status(400).json({ message: 'Invalid days taken' });
+        if (!validationVacationsDays_basedOnTimeInPlace(employee, startDate, endDate)) {
+            return res.status(400).json({message: 'El empleado no lleva el tiempo suficiente para tomarse estas vacaciones en estas fechas. O ya no tiene dias disponisbles'})
         }
 
         employee.save()

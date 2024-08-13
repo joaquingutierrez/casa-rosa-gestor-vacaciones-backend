@@ -16,33 +16,32 @@ const validationDate = (startDate, endDate, dateList, condition) => {
     return true;
 }
 
-const validationDaysTaken = (employee)=> {
-    const joiningDate = employee.joiningDate
-    const today = new Date();
+const validationVacationsDays_basedOnTimeInPlace = (employee, startDate, endDate) => {
+    const joiningDate = new Date(employee.joiningDate);
+    startDate = new Date(startDate)
+    endDate = new Date(endDate)
+    let daysTaken = employee.daysTaken
 
-    const diffMonths = (today.getFullYear() - joiningDate.getFullYear()) * 12 + (today.getMonth() - joiningDate.getMonth());
-
-    const maxVacationDays = (diffMonths) => {
-        switch(true) {
-            case diffMonths < 9:
-                return 0;
-            case diffMonths >= 9 && diffMonths < 12:
-                return 7; 
-            case diffMonths >= 12:
-                return 14;
-            default:
-                return 0;
+    for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
+        console.log(date)
+        const diff_vacationDay_joiningDate_months = (date.getFullYear() - joiningDate.getFullYear()) * 12 + (date.getMonth() - joiningDate.getMonth());
+        if (diff_vacationDay_joiningDate_months < 9) {
+            return false
+        } else {
+            daysTaken += 1
+            if (diff_vacationDay_joiningDate_months >= 9 && diff_vacationDay_joiningDate_months < 12) {
+                if (daysTaken >= 7) {
+                    return false
+                }
+            } else {
+                if (daysTaken >= 14) {
+                    return false
+                }
+            }
         }
-    }
-    const maxVacationDaysResult = maxVacationDays(diffMonths)
-
-    if (employee.daysTaken > maxVacationDaysResult) {
-        return false
     }
     return true
 }
-
-
 
 
 
@@ -58,7 +57,7 @@ const isValidPassword = (password, user) => bcrypt.compare(password, user.passwo
 
 module.exports = {
     validationDate,
-    validationDaysTaken,
+    validationVacationsDays_basedOnTimeInPlace,
     passwordHash,
     isValidPassword
 }
