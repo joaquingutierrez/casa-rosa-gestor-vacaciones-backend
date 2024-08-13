@@ -16,15 +16,33 @@ const validationDate = (startDate, endDate, dateList, condition) => {
     return true;
 }
 
+const getMonthDifference = (startDate, endDate) => {
+
+    // Calcula la diferencia en años y meses
+    let yearsDiff = endDate.getFullYear() - startDate.getFullYear();
+    let monthsDiff = endDate.getMonth() - startDate.getMonth();
+
+    // Ajusta la diferencia en meses según los días
+    const startDay = startDate.getDate();
+    const endDay = endDate.getDate();
+    if (endDay < startDay) {
+        monthsDiff--;
+    }
+
+    // Convierte la diferencia en años a meses y añade la diferencia en meses
+    return yearsDiff * 12 - monthsDiff;
+};
+
 const validationVacationsDays_basedOnTimeInPlace = (employee, startDate, endDate) => {
     const joiningDate = new Date(employee.joiningDate);
+    const today = new Date()
     startDate = new Date(startDate)
     endDate = new Date(endDate)
     let daysTaken = employee.daysTaken
 
     for (let date = new Date(startDate); date <= endDate; date.setDate(date.getDate() + 1)) {
-        console.log(date)
-        const diff_vacationDay_joiningDate_months = (date.getFullYear() - joiningDate.getFullYear()) * 12 + (date.getMonth() - joiningDate.getMonth());
+        /* const diff_vacationDay_joiningDate_months = (date.getFullYear() - joiningDate.getFullYear()) * 12 + (date.getMonth() - joiningDate.getMonth()); */
+        const diff_vacationDay_joiningDate_months = getMonthDifference(date, joiningDate)
         if (diff_vacationDay_joiningDate_months < 9) {
             return false
         } else {
