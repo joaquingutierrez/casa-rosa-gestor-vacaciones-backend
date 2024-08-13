@@ -8,8 +8,8 @@ const getEmployees = async (req, res) => {
         res.status(500).send('Server Error');
     }
 }
+
 const createEmployee = async (req, res) => {
-    console.log(req.body)
     const {
         firstName,
         lastName,
@@ -31,11 +31,16 @@ const createEmployee = async (req, res) => {
             joiningDate,
             rol
         })
-        newEmployee.save()
+        await newEmployee.save()
         res.json(newEmployee)
     }
     catch (err) {
-        console.log(err)
+        if (err.name === 'MongoServerError' && err.code === 11000) {
+            return res.status(409).json({
+                message: 'El DNI ya está registrado.'
+            });
+        }
+        res.status(500).json({ message: "Error al crear el empleado: " + err })
     }
 }
 

@@ -14,15 +14,22 @@ const createVacation = async (req, res) => {
     const { employeeId, startDate, endDate } = req.body;
     try {
         const employee = await Employee.findById(employeeId)
+        if (!employee) {
+            return res.status(404).json({ message: 'Employee not found' });
+        }
         const vacationsList = await Vacation.find()
         const rolId = employee.rol
         const rolCondition = (rol2) => rolId.toString() === rol2.toString()
-        
-        if (!validationDate(startDate, endDate, vacationsList, rolCondition)) return res.status(500).send('Server Error')
-        
+
+        if (!validationDate(startDate, endDate, vacationsList, rolCondition)) {
+            return res.status(400).json({ message: 'Invalid vacation dates' });
+        }
+
         employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
-        
-        if (!validationDaysTaken(employee)) return res.status(500).send('Server Error')
+
+        if (!validationDaysTaken(employee)) {
+            return res.status(400).json({ message: 'Invalid days taken' });
+        }
 
         employee.save()
         const newVacation = new Vacation({ employeeId, rolId, startDate, endDate })
@@ -35,10 +42,10 @@ const createVacation = async (req, res) => {
 }
 
 const getVacationsByEmployeeId = async (req, res) => {
-    const {employeeId} = req.params
+    const { employeeId } = req.params
 
     try {
-        const vacations = await Vacation.find({employeeId: employeeId})
+        const vacations = await Vacation.find({ employeeId: employeeId })
         res.json(vacations);
     }
     catch (err) {

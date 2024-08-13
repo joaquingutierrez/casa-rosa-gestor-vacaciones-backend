@@ -14,7 +14,6 @@ validateTokenRouter.post('/', (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         res.json({ user: decoded });
     } catch (err) {
-        console.error('Error verifying token', err);
         res.status(401).json({ message: 'Invalid token' });
     }
 });
