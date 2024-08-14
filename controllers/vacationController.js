@@ -25,12 +25,12 @@ const createVacation = async (req, res) => {
             return res.status(400).json({ message: 'Invalid vacation dates' });
         }
 
-        
+
         if (!validationVacationsDays_basedOnTimeInPlace(employee, startDate, endDate)) {
-            return res.status(400).json({message: 'El empleado no lleva el tiempo suficiente para tomarse estas vacaciones en estas fechas. O ya no tiene dias disponisbles'})
+            return res.status(400).json({ message: 'El empleado no lleva el tiempo suficiente para tomarse estas vacaciones en estas fechas. O ya no tiene dias disponisbles' })
         }
         employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
-        
+
         employee.save()
         const newVacation = new Vacation({ employeeId, rolId, startDate, endDate })
         newVacation.save()
@@ -53,8 +53,29 @@ const getVacationsByEmployeeId = async (req, res) => {
     }
 }
 
+const getVacationsByDate = async (req, res) => {
+    const date = new Date(req.body.date)
+    const vacationsList = []
+
+    try {
+        const vacations = await Vacation.find()
+        for (const vacation of vacations) {
+            const startDate = new Date(vacation.startDate)
+            const endDate = new Date(vacation.endDate)
+            if (date >= startDate && date <= endDate) {
+                vacationsList.push(vacation)
+            }
+        }
+        res.status(200).send(vacationsList)
+    }
+    catch (err) {
+        res.status(500).send("Error en el servidor")
+    }
+}
+
 module.exports = {
     getVacations,
     createVacation,
+    getVacationsByDate,
     getVacationsByEmployeeId
 }
