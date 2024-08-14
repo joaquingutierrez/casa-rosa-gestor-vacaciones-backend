@@ -59,6 +59,18 @@ const validationVacationsDays_basedOnTimeInPlace = (employee, startDate, endDate
     return true
 }
 
+const countDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    const diffInMs = end - start;
+
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const diffInDays = Math.round(diffInMs / msPerDay);
+
+    return diffInDays;
+}
+
 
 
 
@@ -74,6 +86,7 @@ const isValidPassword = (password, user) => bcrypt.compare(password, user.passwo
 module.exports = {
     validationDate,
     validationVacationsDays_basedOnTimeInPlace,
+    countDays,
     passwordHash,
     isValidPassword
 }

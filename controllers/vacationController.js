@@ -1,6 +1,6 @@
 const Vacation = require("../models/vacationSchema");
 const Employee = require("../models/employeeShema")
-const { validationDate, validationVacationsDays_basedOnTimeInPlace } = require("../utils");
+const { validationDate, validationVacationsDays_basedOnTimeInPlace, countDays } = require("../utils");
 
 const getVacations = async (req, res) => {
     try {
@@ -73,9 +73,31 @@ const getVacationsByDate = async (req, res) => {
     }
 }
 
+const deleteVacation = async (req, res) => {
+    const { vacationId } = req.params
+    try {
+        const vacation = await Vacation.findById(vacationId)
+        const employee = await Employee.findById(vacation.employeeId)
+        if (vacation && employee) {
+            await Vacation.deleteOne(vacation._id)
+            const days = countDays(vacation.startDate, vacation.endDate)
+            await Employee.updateOne(
+                { _id: employee._id },
+                { $inc: { daysTaken: -days } }
+            );
+        }
+        res.status(200).send("Vacaciones eliminada y días actualizados con éxito");
+    }
+    catch (err) {
+        res.status(500).send("Error en el servidor")
+    }
+
+}
+
 module.exports = {
     getVacations,
     createVacation,
     getVacationsByDate,
+    deleteVacation,
     getVacationsByEmployeeId
 }
