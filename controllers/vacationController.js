@@ -25,12 +25,12 @@ const createVacation = async (req, res) => {
             return res.status(400).json({ message: 'Invalid vacation dates' });
         }
 
-        employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
-
+        
         if (!validationVacationsDays_basedOnTimeInPlace(employee, startDate, endDate)) {
             return res.status(400).json({message: 'El empleado no lleva el tiempo suficiente para tomarse estas vacaciones en estas fechas. O ya no tiene dias disponisbles'})
         }
-
+        employee.daysTaken += Math.ceil((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24));
+        
         employee.save()
         const newVacation = new Vacation({ employeeId, rolId, startDate, endDate })
         newVacation.save()
