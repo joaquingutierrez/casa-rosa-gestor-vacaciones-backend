@@ -1,5 +1,6 @@
 // server.js
 const express = require('express');
+const cron = require('node-cron');
 const app = express();
 require('dotenv').config()
 const connectDB = require('./config/db');
@@ -23,7 +24,33 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser())
 
-/* app.use(auth) */
+cron.schedule('0 0 * * *', async () => {
+    try {
+        const today = new Date();
+        const employees = await Employee.find();
+
+        for (const employee of employees) {
+            const joiningDate = new Date(employee.joiningDate);
+
+            // Crea una nueva fecha para la fecha actual con el año de joiningDate
+            const anniversaryDate = new Date(today.getFullYear(), joiningDate.getMonth(), joiningDate.getDate());
+
+            // Si el aniversario ya pasó este año, verifica el siguiente año
+            if (anniversaryDate < today) {
+                anniversaryDate.setFullYear(today.getFullYear() + 1);
+            }
+
+            // Verifica si el aniversario es hoy
+            if (compareDatesIgnoringYear(today, anniversaryDate)) {
+                employee.daysTaken = 0;
+                await employee.save();
+                console.log(`Días tomados reiniciados para el empleado ${employee._id}`);
+            }
+        }
+    } catch (err) {
+        console.error('Error al reiniciar los días tomados:', err);
+    }
+});
 
 app.use('/api/rol', rolRouter);
 app.use('/api/employee', employeeRouter);
