@@ -45,7 +45,7 @@ const createEmployee = async (req, res) => {
 }
 
 const updateEmployee = async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
     const { data } = req.body
     try {
         const updatedEmployee = await Employee.findByIdAndUpdate(id, data, { new: true })
@@ -69,9 +69,20 @@ const getEmployeeById = async (req, res) => {
     }
 }
 
+const deleteEmployee = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const employee = await Employee.findByIdAndDelete(id);
+        res.status(200).json(employee);
+    } catch (err) {
+        res.status(500).send('Server Error');
+    }
+}
+
 module.exports = {
     getEmployees,
     createEmployee,
     updateEmployee,
-    getEmployeeById
+    getEmployeeById,
+    deleteEmployee
 }
