@@ -5,7 +5,6 @@ const validationDate = (startDate, endDate, dateList, condition) => {
     for (let range of dateList) {
         let rangeStartDate = new Date(range.startDate);
         let rangeEndDate = new Date(range.endDate);
-
         if (((startDate >= rangeStartDate && startDate <= rangeEndDate) ||
             (endDate >= rangeStartDate && endDate <= rangeEndDate) ||
             (startDate <= rangeStartDate && endDate >= rangeEndDate)) &&
