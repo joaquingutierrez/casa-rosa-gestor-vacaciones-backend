@@ -44,6 +44,18 @@ const createEmployee = async (req, res) => {
     }
 }
 
+const updateEmployee = async (req, res) => {
+    const {id} = req.params
+    const { data } = req.body
+    try {
+        const updatedEmployee = await Employee.findByIdAndUpdate(id, data, { new: true })
+        res.status(200).json(updatedEmployee)
+    }
+    catch (err) {
+        res.status(500).json({ message: "Error al editar el empleado: " + err })
+    }
+}
+
 const getEmployeeById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -60,5 +72,6 @@ const getEmployeeById = async (req, res) => {
 module.exports = {
     getEmployees,
     createEmployee,
+    updateEmployee,
     getEmployeeById
 }
