@@ -32,11 +32,11 @@ const updateRol = async (req, res) => {
 
     try {
         const updatedRol = await Rol.findByIdAndUpdate(
-            id, 
-            { desc }, 
+            id,
+            { desc },
             { new: true }
         );
-        
+
         if (!updatedRol) {
             return res.status(404).json({ message: "Rol no encontrado" });
         }
@@ -47,8 +47,20 @@ const updateRol = async (req, res) => {
     }
 }
 
+const deleteRol = async (req, res) => {
+    const { id } = req.params
+    try {
+        await Rol.findByIdAndDelete(id)
+        res.status(200).send("Rol eliminado con éxito");
+    }
+    catch (err) {
+        res.status(500).send("Error en el servidor")
+    }
+}
+
 module.exports = {
     getRols,
     createRol,
-    updateRol
+    updateRol,
+    deleteRol
 }
