@@ -10,6 +10,8 @@ const employeeSchema = new Schema({
     birdthDate: Date,
     joiningDate: {type: Date, require: true},
     daysTaken: {type: Number, default: 0},
+    currentVacationsDays_Date: Date,
+    restartVacationsDays_Date: Date,
     rol: { type: mongoose.Schema.Types.ObjectId, ref: 'desc', required: true }
 });
 

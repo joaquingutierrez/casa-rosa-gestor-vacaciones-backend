@@ -70,7 +70,22 @@ const countDays = (startDate, endDate) => {
     return diffInDays;
 }
 
+const updateYear_current = (date) => {
+    date = new Date(date)
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    date.setFullYear(todayYear);
+    return date
+}
 
+const updateYear_next = (date) => {
+    date = new Date(date)
+    const today = new Date();
+    const todayYear = today.getFullYear();
+    const nextYear = todayYear + 1;
+    date.setFullYear(nextYear);
+    return date
+}
 
 
 const bcrypt = require('bcrypt');
@@ -87,5 +102,7 @@ module.exports = {
     validationVacationsDays_basedOnTimeInPlace,
     countDays,
     passwordHash,
-    isValidPassword
+    isValidPassword,
+    updateYear_current,
+    updateYear_next
 }
