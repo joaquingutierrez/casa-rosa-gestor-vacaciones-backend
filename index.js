@@ -15,7 +15,7 @@ const cookieParser = require("cookie-parser");
 connectDB();
 
 app.use(cors({
-    origin: 'http://localhost:3000', // Cambia esto por la URL de tu cliente React
+    origin: 'https://gestor-de-vacaciones-front.vercel.app',
     credentials: true
 }));
 
